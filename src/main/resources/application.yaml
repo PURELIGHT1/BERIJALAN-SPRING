@@ -1,0 +1,35 @@
+name:
+  firstName: Bram
+  lastName: Peranginangin
+
+uri:
+  api-client:
+    dog: https://dog.ceo/api/breeds/
+    acc: https://apidev.acc.co.id/restv2/accgrape/
+
+server:
+  port: 8084
+
+spring:
+  application:
+    name: bootcamp-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/bootcamp_db
+    username: bram
+    password: mynameisBram
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    hibernate:
+      ddl-auto: none
+      show-sql: true
+    generate-ddl: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include=*:
