@@ -1,11 +1,15 @@
 package com.techno.springbootdasar.service.Impl
 
+import com.techno.springbootdasar.domain.dto.request.ReqLoginJWTDto
 import com.techno.springbootdasar.domain.dto.request.ReqProfileDto
+import com.techno.springbootdasar.domain.dto.response.ResEncodeJWTDto
+import com.techno.springbootdasar.domain.dto.response.ResLoginJWTDto
 import com.techno.springbootdasar.domain.dto.response.ResMessageDto
 import com.techno.springbootdasar.domain.dto.response.ResProfileDto
 import com.techno.springbootdasar.domain.entity.ProfilEntity
 import com.techno.springbootdasar.exception.DataNotFoundException
 import com.techno.springbootdasar.repository.ProfileRepository
+import com.techno.springbootdasar.service.AvatarService
 import com.techno.springbootdasar.service.ProfileService
 import jakarta.persistence.EntityManager
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,19 +20,24 @@ import java.util.*
 
 @Service
 class ProfileServiceImpl(
-    val repo : ProfileRepository
+    val repo : ProfileRepository,
+    val service: AvatarService
 ) : ProfileService{
     @Autowired
     lateinit var eM: EntityManager
     override fun insert(req: ReqProfileDto): ResMessageDto<String> {
 //         val data : ProfilEntity = repo.findByUsername(req.username)
 
+        if (req.avatar != null){
+            req.avatar = service.GetAvatar(req.nama!!)
+        }
         val insert = ProfilEntity(
             id = UUID.randomUUID(),
             name = req.nama,
             username = req.username,
             email =  req.email,
-            password = req.password
+            password = req.password,
+            avatar = req.avatar
         )
 
         try{
@@ -48,14 +57,6 @@ class ProfileServiceImpl(
             }
         }
 
-    }
-
-    private fun extractViolatedField(errorMessage: String, cekField : String, data : String): String {
-        return when (cekField) {
-            "EMAIL" -> if (errorMessage.contains(data)) "email" else "Unknown"
-            "USERNAME" -> if (errorMessage.contains(data)) "username" else "Unknown"
-            else -> "Unknown"
-        }
     }
 
     override fun update(id: UUID, req: ReqProfileDto): ResMessageDto<String> {
@@ -85,7 +86,8 @@ class ProfileServiceImpl(
             nama = data.get().name!!,
             username = data.get().username!!,
             email = data.get().email!!,
-            password = data.get().password!!
+            password = data.get().password!!,
+            avatar = data.get().avatar
         )
 
         return ResMessageDto(data = response)
@@ -102,7 +104,8 @@ class ProfileServiceImpl(
                 nama = profile.name!!,
                 username = profile.username!!,
                 email = profile.email!!,
-                password = profile.password!!
+                password = profile.password!!,
+                avatar = profile.avatar
             )
 
             listData.add(response)
@@ -118,6 +121,23 @@ class ProfileServiceImpl(
         }
         repo.delete(data.get())
         return ResMessageDto()
+    }
+
+    override fun login(data: ReqLoginJWTDto): ResLoginJWTDto {
+        val userExists = repo.findByUsernameAndPassword(data.username, data.password)
+
+
+        if(userExists.isEmpty()){
+            throw IllegalArgumentException("Username and password is wrong")
+        }
+        else{
+            return ResLoginJWTDto(
+                name = userExists[0]?.name!!,
+                email = userExists[0]?.email!!,
+                username = userExists[0]?.username!!,
+                id = userExists[0]?.id!!.toString()
+            )
+        }
     }
 
 }

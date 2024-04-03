@@ -6,9 +6,18 @@ uri:
   api-client:
     dog: https://dog.ceo/api/breeds/
     acc: https://apidev.acc.co.id/restv2/accgrape/
+    avatar: https://api.dicebear.com/8.x/pixel-art/
+
+jwt:
+  secret-key: YOUR_SECRET_KEY_THAT_HAS_256_LONG
+
+header:
+  request:
+    api-key: 7e0567e5-7048-438b-861c-7a902e04b0cf
 
 server:
   port: 8084
+  #port: 9090
 
 spring:
   application:

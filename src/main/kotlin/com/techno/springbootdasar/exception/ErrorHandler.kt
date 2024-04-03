@@ -33,7 +33,7 @@ class ErrorHandler {
         exception.printStackTrace()
         return ResponseEntity.badRequest().body(
             ResMessageDto(
-                status = HttpStatus.NOT_FOUND.value(),
+                status = HttpStatus.BAD_REQUEST.value(),
                 message = exception.message.toString()
             )
         )
@@ -47,7 +47,7 @@ class ErrorHandler {
         
         return ResponseEntity.badRequest().body(
             ResMessageDto(
-                status = HttpStatus.CONFLICT.value(),
+                status = HttpStatus.BAD_REQUEST.value(),
                 message = exception.message.toString()
             )
         )

@@ -18,4 +18,6 @@ data class ProfilEntity(
     var email: String?=null,
     @Column(name = "password")
     var password: String?=null,
+    @Column(name = "avatar", columnDefinition = "TEXT")
+    var avatar: String?=null
 )

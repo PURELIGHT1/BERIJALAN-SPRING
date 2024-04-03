@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 
-@FeignClient(value = "ACC-API", url = "https://apidev.acc.co.id/restv2/accgrape/")
+@FeignClient(value = "ACC-API", url = "\${uri.api-client.acc}")
 interface ACCApiClient {
     @PostMapping("getdata/getbranch")
     fun postBranch(
